@@ -8,3 +8,6 @@ body,
 html {
   height: 100%;
 }
+
+/* From the leaflet Tutorial at https://leafletjs.com/examples/quick-start/: */
+#mapid { height: 180px; }
