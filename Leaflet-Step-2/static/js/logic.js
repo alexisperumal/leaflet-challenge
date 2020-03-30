@@ -55,9 +55,10 @@ function createMap(earthquakes, grades, labels, faults) {
   
     // Create the map object with options
     var map = L.map("mapid", {
-      // center: [40.73, -100],
-      center: [40.73, 0],
-      zoom: 2,
+      // center: [40.73, -100], // Center on the Continental US
+      center: [45, -135], // Center on the Eastern Pacific / US West Coast
+      // center: [40.73, 0], // Center on the Prime Meridian
+      zoom: 4,
       layers: [lightmap, earthquakes, faults]
     });
   
@@ -118,7 +119,13 @@ function createMap(earthquakes, grades, labels, faults) {
           fault_lat_long.push([fault_long_lat[j][1],fault_long_lat[j][0]]);
         }
         // var polyline = L.polyline(faults_array[i].geometry.coordinates, {color: 'green'});
-        var polyline = L.polyline(fault_lat_long, {color: 'green'});
+        var polyline = L.polyline(fault_lat_long, {color: 'gray', opacity: 0.6, smoothFactor: 1, weight: 7})
+          .bindPopup(
+            `<h3>${faults_array[i].properties.Name} (${faults_array[i].properties.LAYER})</h3>` +
+            `<p>Source: ${faults_array[i].properties.Source}</p>`
+            // "<h3>" + faults_array[i].properties.Name +"</h3>" +
+            // "<p>" + "oh" + "</p>"  // Human readable date and time.
+          );
         faults.push(polyline);
       }
 
@@ -133,7 +140,7 @@ function createMap(earthquakes, grades, labels, faults) {
   function createMarkers(response) {
 
     // let colors = ["lightblue", "gray", "lightgreen", "yellow", "orange", "red"];
-    let colors = ["gray", "lightgreen", "yellow", "orange", "red", "darkred"];
+    let colors = ["gray", "lightgreen", "yellow", "orange", "darkorange", "red"];
     let labels = ["< 0", "1-2", "2-3", "3-4", "4-5", "5+"];
   
     // Pull the "features" property off of response.data
@@ -181,9 +188,9 @@ function createMap(earthquakes, grades, labels, faults) {
             radius: Math.pow(eq.properties.mag, 2) * 10000
             })
         .bindPopup(
-            "<h3>" + eq.properties.title +"<h3>" +
+            "<h3>" + eq.properties.title +"</h3>" +
             // "<h3>" + eq.properties.time +"<h3>" +
-            "<h3>" + humanDateFormat + "<h3>"  // Human readable date and time.
+            "<p>" + humanDateFormat + "</p>"  // Human readable date and time.
             // "<h3>" + eq.properties.mag + "</h3>"
             );
   
