@@ -1,7 +1,9 @@
 // Alexis Perumal, 3/28/20
 // Code leveraged from the leaflet Tutorial at https://leafletjs.com/examples/quick-start/
 
-function createMap(earthquakes) {
+function createMap(earthquakes, grades, labels) {
+    // earthquakes has an array of earthquake data.
+    // colors and labels store values for the marker legend.
 
     // Create the tile layer that will be the background of our map
     var lightmap = L.tileLayer("https://api.mapbox.com/styles/v1/mapbox/light-v9/tiles/256/{z}/{x}/{y}?access_token={accessToken}", {
@@ -56,18 +58,44 @@ function createMap(earthquakes) {
       collapsed: false
     }).addTo(map);
 
+    // Add a legend
+    // Code from: https://leafletjs.com/examples/choropleth/
+    var legend = L.control({position: 'bottomright'});
+
+    legend.onAdd = function (map) {
+        var div = L.DomUtil.create('div', 'info legend');
+
+        // div.innerHTML = "<p>Hi</p>";
+        inner_html_str = "";
+        for (var i = 0; i<grades.length-1; i++) {
+            inner_html_str += `<i style="background:${grades[i]}"></i>${labels[i]}<br>`;
+        }
+        inner_html_str += `<i style="background:${grades[i]}"></i>${labels[i]}`;
+        div.innerHTML = inner_html_str;
+
+        return div
+    };
+
+    legend.addTo(map);
+
     return(map);
   }
   
 
 
   function createMarkers(response) {
+
+    // let colors = ["lightblue", "gray", "lightgreen", "yellow", "orange", "red"];
+    let colors = ["gray", "lightgreen", "yellow", "orange", "red", "darkred"];
+    let labels = ["< 0", "1-2", "2-3", "3-4", "4-5", "5+"];
   
     // Pull the "features" property off of response.data
     var eq_list = response.features;
   
     // Initialize an array to hold bike markers
     var eqMarkers = [];
+
+    let markerColor = "";
   
     // Loop through the stations array
     for (var index = 0; index < eq_list.length; index++) {
@@ -79,11 +107,29 @@ function createMap(earthquakes) {
       let humanDateFormat = dateObject.toUTCString();
     //   let humanDateFormat = dateObject.toLocaleString();
 
+      let magnitude = eq.properties.mag;
+
+      if (magnitude < 0) {
+        markerColor = colors[0];
+      } else if (magnitude < 1) {
+        markerColor = colors[1];
+      } else if (magnitude < 2) {
+        markerColor = colors[2];
+      } else if (magnitude < 3) {
+        markerColor = colors[3];
+      } else if (magnitude < 4) {
+        markerColor = colors[4];
+      } else if (magnitude < 5) {
+        markerColor = colors[4];
+      } else {
+        markerColor = colors[5];
+      }
+
       var eqMarker = L.circle([eq.geometry.coordinates[1], eq.geometry.coordinates[0]], {
             color:"black",
             weight: 1,
             opacity: .3,
-            fillColor:"orange",
+            fillColor: markerColor,
             fillOpacity: 0.3,
             radius: Math.pow(eq.properties.mag, 2) * 10000
             })
@@ -94,12 +140,15 @@ function createMap(earthquakes) {
             // "<h3>" + eq.properties.mag + "</h3>"
             );
   
-      // Add the marker to the bikeMarkers array
+      // Add the marker to the eqMarkers array
       eqMarkers.push(eqMarker);
     }
+
+    // Create a legend which will be attached to the map.
+
   
     // Create a layer group made from the bike markers array, pass it into the createMap function
-    createMap(L.layerGroup(eqMarkers));
+    createMap(L.layerGroup(eqMarkers), colors, labels);
   }
   
   
