@@ -3,7 +3,7 @@ UCSD Data Science Bootcamp HW17 - Visualize USGS realtime earthquake data on a m
 
 ### Assignment
 
-Do a geoplot of earthquake data from USGS and faultlines.
+Do a geoplot of earthquake data from USGS and fault lines.
 
 ### Key Files
 
