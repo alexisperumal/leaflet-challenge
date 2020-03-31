@@ -1,6 +1,8 @@
 # leaflet-challenge
 UCSD Data Science Bootcamp HW17 - Visualize USGS realtime earthquake data on a map
 
+![Demo](Earthquake_Website_Demo.gif)
+
 ### Assignment
 
 Do a geoplot of earthquake data from USGS and fault lines.
