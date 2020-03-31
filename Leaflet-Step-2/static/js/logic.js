@@ -43,7 +43,7 @@ function createMap(earthquakes, grades, labels, faults) {
     // Create a baseMaps object to hold the lightmap layer
     var baseMaps = {
       "Light Map": lightmap,
-      "Stree Map": streetmap,
+      "Street Map": streetmap,
       "Satelite Map": satmap
     };
   
